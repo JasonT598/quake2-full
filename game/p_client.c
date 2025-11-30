@@ -616,8 +616,8 @@ void InitClientPersistant (gclient_t *client)
 
 	client->pers.weapon = item;
 
-	client->pers.health			= 100;
-	client->pers.max_health		= 100;
+	client->pers.health			= 200;
+	client->pers.max_health		= 200;
 
 	client->pers.max_bullets	= 200;
 	client->pers.max_shells		= 100;
