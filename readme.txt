@@ -7,6 +7,7 @@ How to Play:
 Essentially You need to copy the "assassin" folder into your QuakeII Files and then launch the game with a shortcut that has +set game assassin at the end of it, and you should be able to launch into the game with the mod.
 Essentially the same as normal Quake II
 But with some new added features and tools
+F1 for Help
 F to Assassinate(Close Up)
 W to Poison(Ranged)
 V To use "EagleVision"
