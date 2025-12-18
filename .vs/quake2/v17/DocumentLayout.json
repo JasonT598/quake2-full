@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\p_weapon.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|solutionrelative:game\\p_weapon.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\g_cmds.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|solutionrelative:game\\g_cmds.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\p_client.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|solutionrelative:game\\p_client.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F575AF4A-7BDD-47F6-B65F-F43C514E0069}|quake2.vcxproj|C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\win32\\q2.rc||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{F575AF4A-7BDD-47F6-B65F-F43C514E0069}|quake2.vcxproj|solutionrelative:win32\\q2.rc||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\g_local.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99BC3F01-A7EE-4881-939F-8A5EB75E1973}|game\\game.vcxproj|solutionrelative:game\\g_local.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,39 +23,28 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "p_client.c",
-              "DocumentMoniker": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\p_client.c",
-              "RelativeDocumentMoniker": "game\\p_client.c",
-              "ToolTip": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\p_client.c",
-              "RelativeToolTip": "game\\p_client.c",
-              "ViewState": "AgIAAFoCAAAAAAAAAAAiwHMCAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-11-22T19:40:27.084Z"
+              "Title": "g_local.h",
+              "DocumentMoniker": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\g_local.h",
+              "RelativeDocumentMoniker": "game\\g_local.h",
+              "ToolTip": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\g_local.h",
+              "RelativeToolTip": "game\\g_local.h",
+              "ViewState": "AgIAAMwCAAAAAAAAAAAmwOICAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-05T16:03:34.722Z",
+              "IsPinned": true
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "p_weapon.c",
-              "DocumentMoniker": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\p_weapon.c",
-              "RelativeDocumentMoniker": "game\\p_weapon.c",
-              "ToolTip": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\p_weapon.c",
-              "RelativeToolTip": "game\\p_weapon.c",
-              "ViewState": "AgIAANIEAAAAAAAAAAAUwOYEAAAAAAAAAAAAAA==",
+              "Title": "g_cmds.c",
+              "DocumentMoniker": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\g_cmds.c",
+              "RelativeDocumentMoniker": "game\\g_cmds.c",
+              "ToolTip": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\game\\g_cmds.c",
+              "RelativeToolTip": "game\\g_cmds.c",
+              "ViewState": "AgIAACgEAAAAAAAAAAAcwEAEAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-11-11T03:06:17.453Z",
+              "WhenOpened": "2025-12-18T01:47:56.168Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "q2.rc",
-              "DocumentMoniker": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\win32\\q2.rc",
-              "RelativeDocumentMoniker": "win32\\q2.rc",
-              "ToolTip": "C:\\Users\\Jason\\Downloads\\Rusteze\\quake2-full\\win32\\q2.rc",
-              "RelativeToolTip": "win32\\q2.rc",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-10-31T14:21:47.935Z"
             }
           ]
         }

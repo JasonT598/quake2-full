@@ -869,6 +869,102 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 	}
 }
 
+void Cmd_HelpMod_f (edict_t *ent)
+{
+	gi.cprintf (ent, PRINT_HIGH,
+		"=====================\n"
+		"Assassin's Creed Mod for Quake 2:\n"
+		"=====================\n"
+		"This is the Assassin's Creed Mod for Quake 2, turning a first-person shooter into a first-person shooter focused on stealth. Nothing more, nothing less\n"
+		"How to Play: You only have melee weapons and some silent guns. You must get through the levels, taking down enemies via a stealth takedown or with your silenced blaster or with your melee weapons. You can hide behind walls and or gates.\n"
+		"Feature #1 10 Assassin's Creed-Inspired Weapons - Hidden Blade Sword Dagger Hidden Gun(Blaster) Musket(Single Shot Rifle) Grenade Launcher(NoiseMaker) Throwing Knives Axe Spear Mace\n"
+		"Feature #2 5 Useable Items from Assassin's Creed - Smoke Bomb Poison Throwing Knives Noise Maker Silent Gun\n"
+		"Feature #3 5 Stealth Mechanics - Assassinate Throwing Knife Kill Toggled Crouch Smoke Bombs Silent Gun\n"
+		"Feature #4 Instant Kill Ability(Assassinate From Behind)\n"
+		"Feature #5 3 Mission Objectives - Assassinate Pickpocket Poison an Enemy\n"
+		"Have Fun\n"
+		"=====================\n"
+	);
+}
+
+void Cmd_Assassinate_f(edict_t* ent)
+{
+	edict_t* target = NULL;
+	vec3_t forward, end;
+	trace_t tr;
+
+	AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+	VectorMA(ent->s.origin, 64, forward, end);
+	tr = gi.trace(ent->s.origin, NULL, NULL, end, ent, MASK_SHOT);
+	target = tr.ent;
+	if (target && target->svflags & SVF_MONSTER && target->health > 0)
+	{
+		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/assassinate.wav"), 1, ATTN_NORM, 0);
+		AngleVectors(target->s.angles, forward, NULL, NULL);
+		T_Damage(target, ent, ent, forward, target->s.origin, tr.plane.normal, 1000, 0, DAMAGE_NO_KNOCKBACK, MOD_ASSASSIN);
+		gi.cprintf(ent, PRINT_HIGH, "Assassinated \n");
+	}
+}
+
+void Cmd_Poison_f(edict_t* ent)
+{
+	edict_t* target = NULL;
+	vec3_t forward, end;
+	trace_t tr;
+
+	AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+	VectorMA(ent->s.origin, 512, forward, end);
+	tr = gi.trace(ent->s.origin, NULL, NULL, end, ent, MASK_SHOT);
+	target = tr.ent;
+	if (target && target->svflags & SVF_MONSTER && target->health > 0)
+	{
+		AngleVectors(target->s.angles, forward, NULL, NULL);
+		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/assassinate.wav"), 1, ATTN_NORM, 0);
+		target->s.renderfx |= RF_SHELL_GREEN;
+		T_Damage(target, ent, ent, forward, target->s.origin, tr.plane.normal, 1000, 0, DAMAGE_NO_KNOCKBACK, MOD_ASSASSIN);
+		gi.cprintf(ent, PRINT_HIGH, "Poison Killed \n");
+	}
+}
+
+void Cmd_EagleVision(edict_t* ent)
+{
+	gi.WriteByte(svc_temp_entity);
+	gi.WriteByte(TE_TELEPORT_EFFECT);
+	gi.WritePosition(ent->s.origin);
+	gi.multicast(ent->s.origin, MULTICAST_PVS);
+
+	edict_t* target = NULL;
+	int search = 384;
+	target = findradius(target, ent->s.origin, search);
+	gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/eaglevision.wav"), 1, ATTN_NORM, 0);
+	while(target != NULL)
+	{
+		if (target->svflags & SVF_MONSTER && target->health > 0)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Enemy Around \n");
+			return;
+		}
+		target = findradius(target, ent->s.origin, search);
+	}
+	gi.cprintf(ent, PRINT_HIGH, "No Enemies Around \n");;
+}
+
+void Cmd_Whistle(edict_t* ent)
+{
+	edict_t* target = NULL;
+	float range = 384;
+	gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/whistle.wav"), 1, ATTN_NORM, 0);
+	while((target = findradius(target, ent->s.origin, range)) != NULL)
+	{
+		if (!(target->svflags & SVF_MONSTER) || target->health <= 0)
+			continue;
+		target->enemy = ent;
+		FoundTarget(target);
+	}
+	gi.cprintf(ent, PRINT_HIGH, "Whistled\n");
+
+}
+
 void Cmd_PlayerList_f(edict_t *ent)
 {
 	int i;
@@ -987,6 +1083,16 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	else if (Q_stricmp (cmd, "helpmod") == 0)
+		Cmd_HelpMod_f(ent);
+	else if (Q_stricmp(cmd, "assassinate") == 0)
+		Cmd_Assassinate_f(ent);
+	else if (Q_stricmp(cmd, "poison") == 0)
+		Cmd_Poison_f(ent);
+	else if (Q_stricmp(cmd, "eaglevision") == 0)
+		Cmd_EagleVision(ent);
+	else if (Q_stricmp(cmd, "whistle") == 0)
+		Cmd_Whistle(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

@@ -68,6 +68,11 @@ void PlayerNoise(edict_t *who, vec3_t where, int type)
 		}
 	}
 
+	if(type != PNOISE_WEAPON && (who->client->ps.pmove.pm_flags & PMF_DUCKED))
+	{
+		return;
+	}
+
 	if (deathmatch->value)
 		return;
 
@@ -529,8 +534,6 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 			ent->client->weaponstate = WEAPON_READY;
 	}
 }
-
-
 /*
 ======================================================================
 
@@ -548,48 +551,28 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	vec3_t	offset;
 	vec3_t	forward, right;
 	vec3_t	start;
-	int		damage = 125;
-	float	timer;
-	int		speed;
-	float	radius;
+	int		damage = 10000;
+	//float	timer;
+	int		speed = 2000;
+	//float	radius;
 
-	radius = damage+40;
-	if (is_quad)
-		damage *= 4;
+	//radius = damage+40;
+	//if (is_quad)
+		//damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-	timer = ent->client->grenade_time - level.time;
-	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
-	fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
-
+	//timer = ent->client->grenade_time - level.time;
+	//speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
+	//fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
+	Knife(ent, start, forward, damage, speed);
+	gi.cprintf(ent, PRINT_HIGH, "Ya Yeet The Throwing Knive");
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 		ent->client->pers.inventory[ent->client->ammo_index]--;
 
-	ent->client->grenade_time = level.time + 1.0;
-
-	if(ent->deadflag || ent->s.modelindex != 255) // VWep animations screw up corpses
-	{
-		return;
-	}
-
-	if (ent->health <= 0)
-		return;
-
-	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-	{
-		ent->client->anim_priority = ANIM_ATTACK;
-		ent->s.frame = FRAME_crattak1-1;
-		ent->client->anim_end = FRAME_crattak3;
-	}
-	else
-	{
-		ent->client->anim_priority = ANIM_REVERSE;
-		ent->s.frame = FRAME_wave08;
-		ent->client->anim_end = FRAME_wave01;
-	}
+	ent->client->grenade_time = level.time + 0.1;
 }
 
 void Weapon_Grenade (edict_t *ent)
@@ -643,50 +626,15 @@ void Weapon_Grenade (edict_t *ent)
 
 	if (ent->client->weaponstate == WEAPON_FIRING)
 	{
-		if (ent->client->ps.gunframe == 5)
-			gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/hgrena1b.wav"), 1, ATTN_NORM, 0);
-
-		if (ent->client->ps.gunframe == 11)
-		{
-			if (!ent->client->grenade_time)
-			{
-				ent->client->grenade_time = level.time + GRENADE_TIMER + 0.2;
-				ent->client->weapon_sound = gi.soundindex("weapons/hgrenc1b.wav");
-			}
-
-			// they waited too long, detonate it in their hand
-			if (!ent->client->grenade_blew_up && level.time >= ent->client->grenade_time)
-			{
-				ent->client->weapon_sound = 0;
-				weapon_grenade_fire (ent, true);
-				ent->client->grenade_blew_up = true;
-			}
-
-			if (ent->client->buttons & BUTTON_ATTACK)
-				return;
-
-			if (ent->client->grenade_blew_up)
-			{
-				if (level.time >= ent->client->grenade_time)
-				{
-					ent->client->ps.gunframe = 15;
-					ent->client->grenade_blew_up = false;
-				}
-				else
-				{
-					return;
-				}
-			}
-		}
 
 		if (ent->client->ps.gunframe == 12)
 		{
-			ent->client->weapon_sound = 0;
+			//ent->client->weapon_sound = 0;
 			weapon_grenade_fire (ent, false);
 		}
 
-		if ((ent->client->ps.gunframe == 15) && (level.time < ent->client->grenade_time))
-			return;
+		//if ((ent->client->ps.gunframe == 15) && (level.time < ent->client->grenade_time))
+			//return;
 
 		ent->client->ps.gunframe++;
 
@@ -711,12 +659,12 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 	vec3_t	offset;
 	vec3_t	forward, right;
 	vec3_t	start;
-	int		damage = 120;
-	float	radius;
+	int		damage = 0;
+	float	radius = 0;
 
-	radius = damage+40;
-	if (is_quad)
-		damage *= 4;
+	//radius = damage+40;
+	//if (is_quad)
+		//damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
@@ -725,7 +673,7 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_grenade (ent, start, forward, damage, 600, 2.5, radius);
+	fire_smokebomb (ent, start, forward, damage, 600, 2.5, radius);
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
@@ -819,6 +767,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	vec3_t	start;
 	vec3_t	offset;
 
+	int damage_base = 10000;
 	if (is_quad)
 		damage *= 4;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
@@ -830,25 +779,19 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	ent->client->kick_angles[0] = -1;
 
 	fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
-	start[0] += right[0] * 10;
-	start[1] += right[1] * 10;
-	start[2] += right[2] * 10;
 	fire_blaster(ent, start, forward, damage, 1000, effect, hyper);
-	start[0] -= right[0] * 20;
-	start[1] -= right[1] * 20;
-	start[2] -= right[2] * 20;
-	fire_blaster(ent, start, forward, damage, 1000, effect, hyper);
+	gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/supressor.wav"), 0.5, ATTN_NORM, 0);
 
 	// send muzzle flash
-	gi.WriteByte (svc_muzzleflash);
-	gi.WriteShort (ent-g_edicts);
-	if (hyper)
-		gi.WriteByte (MZ_HYPERBLASTER | is_silenced);
-	else
-		gi.WriteByte (MZ_BLASTER | is_silenced);
-	gi.multicast (ent->s.origin, MULTICAST_PVS);
+	//gi.WriteByte (svc_muzzleflash);
+	//gi.WriteShort (ent-g_edicts);
+	//if (hyper)
+		//gi.WriteByte (MZ_HYPERBLASTER | is_silenced);
+	//else
+		//gi.WriteByte (MZ_BLASTER | is_silenced);
+	//gi.multicast (ent->s.origin, MULTICAST_PVS);
 
-	PlayerNoise(ent, start, PNOISE_WEAPON);
+	//PlayerNoise(ent, start, PNOISE_WEAPON);
 }
 
 
@@ -866,10 +809,10 @@ void Weapon_Blaster_Fire (edict_t *ent)
 
 void Weapon_Blaster (edict_t *ent)
 {
-	static int	pause_frames[]	= {19, 32, 0};
+	static int	pause_frames[]	= {19, 32, 43, 0};
 	static int	fire_frames[]	= {5, 0};
 
-	Weapon_Generic (ent, 4, 8, 52, 55, pause_frames, fire_frames, Weapon_Blaster_Fire);
+	Weapon_Generic (ent, 4, 50, 43, 55, pause_frames, fire_frames, Weapon_Blaster_Fire);
 }
 
 

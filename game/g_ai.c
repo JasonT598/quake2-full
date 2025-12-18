@@ -114,21 +114,50 @@ void ai_stand (edict_t *self, float dist)
 	{
 		if (self->enemy)
 		{
-			VectorSubtract (self->enemy->s.origin, self->s.origin, v);
+			VectorSubtract(self->enemy->s.origin, self->s.origin, v);
 			self->ideal_yaw = vectoyaw(v);
 			if (self->s.angles[YAW] != self->ideal_yaw && self->monsterinfo.aiflags & AI_TEMP_STAND_GROUND)
 			{
 				self->monsterinfo.aiflags &= ~(AI_STAND_GROUND | AI_TEMP_STAND_GROUND);
-				self->monsterinfo.run (self);
+				self->monsterinfo.run(self);
 			}
-			M_ChangeYaw (self);
-			ai_checkattack (self, 0);
+			M_ChangeYaw(self);
+			ai_checkattack(self, 0);
 		}
 		else
-			FindTarget (self);
+		{
+			edict_t* player = &g_edicts[1];
+			if(player->inuse && player->health > 0)
+			{
+				if(player->client->ps.pmove.pm_flags & PMF_DUCKED)
+				{
+					vec3_t y;
+					VectorSubtract(player->s.origin, self->s.origin, y);
+					float distance = VectorLength(y);
+					if(distance > 128)
+					{
+						return;
+					}
+				}
+			}
+			FindTarget(self);
+		}
 		return;
 	}
-
+	edict_t* player = &g_edicts[1];
+	if (player->inuse && player->health > 0)
+	{
+		if (player->client->ps.pmove.pm_flags & PMF_DUCKED)
+		{
+			vec3_t y;
+			VectorSubtract(player->s.origin, self->s.origin, y);
+			float distance = VectorLength(y);
+			if (distance > 128)
+			{
+				return;
+			}
+		}
+	}
 	if (FindTarget (self))
 		return;
 	

@@ -342,6 +342,38 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 	G_FreeEdict (self);
 }
 
+void Knife(edict_t* self, vec3_t start, vec3_t aimdir, int damage, int speed)
+{
+	edict_t* knife;
+	vec3_t	dir;
+	vec3_t forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+	knife = G_Spawn();
+	VectorCopy(start, knife->s.origin);
+	VectorScale(forward, speed, knife->velocity);
+
+	knife->movetype = MOVETYPE_FLYMISSILE;
+	knife->clipmask = MASK_SHOT;
+	knife->solid = SOLID_BBOX;
+	knife->s.effects |= EF_ROTATE;
+
+	VectorClear(knife->mins);
+	VectorClear(knife->maxs);
+
+	knife->s.modelindex = gi.modelindex("models/objects/laser/tris.md2");
+	knife->owner = self;
+
+	knife->touch = blaster_touch;
+
+	knife->dmg = 10000;
+	knife->classname = "throwingknife";
+
+	gi.linkentity(knife);
+}
+
+
 void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int effect, qboolean hyper)
 {
 	edict_t	*bolt;
@@ -560,6 +592,86 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 	}
 }
 
+void Smoke_Bomb_Explode(edict_t* ent)
+{
+	gi.WriteByte(svc_temp_entity);
+	gi.WriteByte(TE_ROCKET_EXPLOSION);
+	gi.WritePosition(ent->s.origin);
+	gi.multicast(ent->s.origin, MULTICAST_PHS);
+	gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/smokebomb.wav"), 0.8, ATTN_NORM, 0);
+	edict_t* monster = NULL;
+	float radius = 256.0f;
+	while ((monster = findradius(monster, ent->s.origin, radius)) != NULL)
+	{
+		if(!monster ->inuse)
+			continue;
+
+		if (monster->svflags & SVF_MONSTER && monster->health > 0)
+		{
+			monster->nextthink = level.time + 10.0f;
+			monster->s.renderfx |= RF_SHELL_BLUE;
+		}
+	}
+	G_FreeEdict(ent);
+}
+
+void fire_smokebomb(edict_t* self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t* grenade;
+	vec3_t	dir;
+	vec3_t	forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	grenade = G_Spawn();
+	VectorCopy(start, grenade->s.origin);
+	VectorScale(aimdir, speed, grenade->velocity);
+	VectorMA(grenade->velocity, 200 + crandom() * 10.0, up, grenade->velocity);
+	VectorMA(grenade->velocity, crandom() * 10.0, right, grenade->velocity);
+	VectorSet(grenade->avelocity, 300, 300, 300);
+	grenade->movetype = MOVETYPE_BOUNCE;
+	grenade->clipmask = MASK_SHOT;
+	grenade->solid = SOLID_BBOX;
+	grenade->s.effects |= EF_GRENADE;
+	VectorClear(grenade->mins);
+	VectorClear(grenade->maxs);
+	grenade->s.modelindex = gi.modelindex("models/objects/grenade/tris.md2");
+	grenade->owner = self;
+	grenade->touch = Grenade_Touch;
+	grenade->nextthink = level.time + timer;
+
+	grenade->think = Smoke_Bomb_Explode;
+	grenade->dmg = 0;
+	grenade->dmg_radius = 0;
+	grenade->classname = "smokebomb";
+
+	gi.linkentity(grenade);
+}
+
+void alert(edict_t* sounder, edict_t* attacker, float radius)
+{
+	edict_t* target = NULL;
+	vec3_t v;
+
+	while((target = findradius(target, sounder->s.origin, radius)) != NULL)
+	{
+		if (!target->svflags & SVF_MONSTER)
+			continue;
+		if(target == attacker)
+			continue;
+		if ((target->svflags & SVF_MONSTER) && (target->health > 0))
+		{
+			VectorSubtract(sounder->s.origin, target->s.origin, v);
+			target->ideal_yaw = vectoyaw(v);
+			M_ChangeYaw(target);
+
+			target->enemy = attacker;
+			FoundTarget(target);
+		}
+	}
+
+}
 
 /*
 =================
@@ -588,7 +700,7 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 
 	if (other->takedamage)
 	{
-		T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 0, 0, MOD_ROCKET);
+		T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, 1, 0, 0, MOD_ROCKET);
 	}
 	else
 	{
@@ -604,13 +716,11 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 		}
 	}
 
-	T_RadiusDamage(ent, ent->owner, ent->radius_dmg, other, ent->dmg_radius, MOD_R_SPLASH);
+	alert(ent, ent->owner, 1024);
+	
 
 	gi.WriteByte (svc_temp_entity);
-	if (ent->waterlevel)
-		gi.WriteByte (TE_ROCKET_EXPLOSION_WATER);
-	else
-		gi.WriteByte (TE_ROCKET_EXPLOSION);
+	gi.WriteByte (TE_ROCKET_EXPLOSION);
 	gi.WritePosition (origin);
 	gi.multicast (ent->s.origin, MULTICAST_PHS);
 

@@ -1559,6 +1559,8 @@ void PrintPmove (pmove_t *pm)
 	Com_Printf ("sv %3i:%i %i\n", pm->cmd.impulse, c1, c2);
 }
 
+
+
 /*
 ==============
 ClientThink
@@ -1640,6 +1642,20 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		{
 			ent->s.origin[i] = pm.s.origin[i]*0.125;
 			ent->velocity[i] = pm.s.velocity[i]*0.125;
+		}
+
+		if ((ucmd->upmove >= 10) && (ent->groundentity == NULL) && (ent->waterlevel == 0))
+		{
+			vec3_t forward;
+			vec3_t end;
+			trace_t trace;
+			AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+			VectorMA(ent->s.origin, 10, forward, end);
+			trace = gi.trace(ent->s.origin, ent->mins, ent->maxs, end, ent, MASK_PLAYERSOLID);
+			if(trace.fraction < 1.0)
+			{
+				ent->velocity[2] = 250;
+			}
 		}
 
 		VectorCopy (pm.mins, ent->mins);
