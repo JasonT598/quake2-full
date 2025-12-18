@@ -1,29 +1,61 @@
+Assassin's Creed- A Quake 2 Mod
 
-This is the complete source code for Quake 2, version 3.19, buildable with
-visual C++ 6.0.  The linux version should be buildable, but we haven't
-tested it for the release.
+This is the Assassin's Creed  Mod for Quake 2, turning a first-person shooter into a first-person shooter focused on stealth.
+Nothing more, nothing less
 
-The code is all licensed under the terms of the GPL (gnu public license).  
-You should read the entire license, but the gist of it is that you can do 
-anything you want with the code, including sell your new version.  The catch 
-is that if you distribute new binary versions, you are required to make the 
-entire source code available for free to everyone.
+How to Play:
+Essentially the same as normal Quake II
+But with some new added features and tools
+F to Assassinate(Close Up)
+W to Poison(Ranged)
+V To use "EagleVision"
+Y to Whistle
+Grenade Launcher now shoots Smoke Bombs, freezing enemies in place to kill
+Grenades have been changed; they don't explode and act as Throwing Knives
+The Blaster is now silenced and takes a while to reload
+The RPG has been changed to be a noisemaker; shoot it at a wall, and enemies nearby will run to it
+Tips:
+Crouching is everything, and this time it's a toggle, not a hold down
+Enemies won't hear you walk while crouching
+You can climb up walls to get to the high ground
+Eagle Vision can inform you of whether an enemy is nearby or not
+Whistling can draw enemies towards you to assassinate.
 
-The primary intent of this release is for entertainment and educational 
-purposes, but the GPL does allow commercial exploitation if you obey the 
-full license.  If you want to do something commercial and you just can't bear 
-to have your source changes released, we could still negotiate a separate 
-license agreement (for $$$), but I would encourage you to just live with the 
-GPL.
+Feature #1
+10 Assassin's Creed-Inspired Weapons
+1. Hidden Blade
+2. Sword
+3. Dagger
+4. Hidden Gun(Blaster)
+5. Musket(Single Shot Rifle)
+6. Grenade Launcher(NoiseMaker)
+7. Throwing Knives
+8. Axe
+9. Spear
+10. Mace
 
-All of the Q2 data files remain copyrighted and licensed under the 
-original terms, so you cannot redistribute data from the original game, but if 
-you do a true total conversion, you can create a standalone game based on 
-this code.
+Feature #2
+5 Useable Items from Assassin's Creed
+1. Smoke Bomb
+2. Poison
+3. Throwing Knives
+4. Noise Maker
+5. Silent Gun
 
-Thanks to Robert Duffy for doing the grunt work of building this release.
+Feature #3
+5 Stealth Mechanics
+1. Climbing Up
+2. No Movement While Crouching
+3. Toggled Crouch
+4. Eagle Vision
+5. Whistle
 
-John Carmack
-Id Software
+Feature #4
+1. Instant Kill Ability
 
+Feature #5
+3 Mission Objectives
+1. Assassinate
+2. Pickpocket
+3. Poison an Enemy
 
